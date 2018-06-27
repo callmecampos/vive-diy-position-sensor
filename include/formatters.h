@@ -30,7 +30,7 @@ struct FormatterDef {
 
 
 // Abstract base class for formatter nodes. They all get different inputs, but always produce data streams.
-class FormatterNode 
+class FormatterNode
     : public WorkerNode
     , public Producer<DataChunk> {
 public:
@@ -45,43 +45,38 @@ protected:
 };
 
 // Format sensor angles to a text form.
-class SensorAnglesTextFormatter
-    : public FormatterNode
-    , public Consumer<SensorAnglesFrame> {
+class SensorAnglesTextFormatter: public FormatterNode, public Consumer<SensorAnglesFrame> {
 public:
     SensorAnglesTextFormatter(uint32_t idx, const FormatterDef &def) : FormatterNode(idx, def) {}
     virtual void consume(const SensorAnglesFrame& f);
 };
 
 // Base class for geometry formatters.
-class GeometryFormatter 
-    : public FormatterNode
-    , public Consumer<ObjectPosition> {
-public:
+class GeometryFormatter: public FormatterNode, public Consumer<ObjectPosition> {
+  public:
     static std::unique_ptr<GeometryFormatter> create(uint32_t idx, const FormatterDef &def);
 
-protected:
+  protected:
     GeometryFormatter(uint32_t idx, const FormatterDef &def) : FormatterNode(idx, def) {}
 };
 
 // Format object geometry in a text form.
-class GeometryTextFormatter : public GeometryFormatter {
+class GeometryTextFormatter: public GeometryFormatter {
 public:
     GeometryTextFormatter(uint32_t idx, const FormatterDef &def) : GeometryFormatter(idx, def) {}
     virtual void consume(const ObjectPosition& f);
 };
 
-
 // Format object geometry in Mavlink format.
-class GeometryMavlinkFormatter : public GeometryFormatter {
-public:
+class GeometryMavlinkFormatter: public GeometryFormatter {
+  public:
     GeometryMavlinkFormatter(uint32_t idx, const FormatterDef &def);
     virtual void consume(const ObjectPosition& f);
 
     virtual bool debug_cmd(HashedWord *input_words);
     virtual void debug_print(PrintStream &stream);
 
-private:
+  private:
     bool position_valid(const ObjectPosition& g);
     void send_message(uint32_t msgid, const char *packet, Timestamp cur_time, uint8_t min_length, uint8_t length, uint8_t crc_extra);
 
@@ -91,4 +86,3 @@ private:
     bool debug_print_state_;
     uint32_t debug_late_messages_;
 };
-

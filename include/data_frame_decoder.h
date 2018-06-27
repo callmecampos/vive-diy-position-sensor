@@ -4,7 +4,7 @@
 #include "primitives/float16.h"
 #include "messages.h"
 
-// See data frame description here: 
+// See data frame description here:
 // https://github.com/nairol/LighthouseRedox/blob/master/docs/Light%20Emissions.md#ootx-frame
 // https://github.com/nairol/LighthouseRedox/blob/master/docs/Base%20Station.md#base-station-info-block
 struct DecodedDataFrame {
@@ -27,15 +27,11 @@ struct DecodedDataFrame {
 } __attribute__((packed));
 static_assert(sizeof(DecodedDataFrame) == 33, "DataFrame should be 33 bytes long. Check it's byte-level packed.");
 
-// Data Frame Decoder for one base station.
-// TODO: Check CRC32.
-class DataFrameDecoder
-    : public WorkerNode
-    , public Consumer<DataFrameBit>
-    , public Producer<DataFrame> {
+// OOTX Data Structure Frame Decoder for a base station.
+class OOTXFrameDecoder: public WorkerNode, public Consumer<OOTXFrameBit>, public Producer<OOTXFrame> { // TODO: check CRC32
 public:
     DataFrameDecoder(uint32_t base_station_idx);
-    virtual void consume(const DataFrameBit &bit);
+    virtual void consume(const OOTXFrameBit &bit);
 
     virtual bool debug_cmd(HashedWord *input_words);
     virtual void debug_print(PrintStream &stream);
@@ -43,7 +39,7 @@ public:
 private:
     void reset();
 
-    const uint32_t base_station_idx_;  // Base station data we decode. 
+    const uint32_t base_station_idx_;  // Base station data we decode.
     uint32_t prev_cycle_idx_;  // Last cycle idx for which we saw a bit.
     uint32_t preamble_len_;
     bool skip_one_set_bit_;

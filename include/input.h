@@ -27,10 +27,8 @@ struct InputDef {
 
 
 // Base class for input nodes. They all produce Pulse-s.
-class InputNode 
-    : public WorkerNode
-    , public Producer<Pulse> {
-public:
+class InputNode: public WorkerNode, public Producer<Pulse> {
+  public:
     // Create input node of needed type from given configuration.
     static std::unique_ptr<InputNode> create(uint32_t input_idx, const InputDef &def);
     typedef StaticRegistrar<decltype(create)*> CreatorRegistrar;
@@ -39,11 +37,11 @@ public:
     virtual bool debug_cmd(HashedWord *input_words);
     virtual void debug_print(PrintStream &stream);
 
-protected:
+  protected:
     InputNode(uint32_t input_idx);
     void enqueue_pulse(Timestamp start, TimeDelta len);
 
-private:
+  private:
     // Index of this input.
     uint32_t input_idx_;
 

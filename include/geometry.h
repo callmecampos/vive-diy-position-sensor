@@ -31,14 +31,11 @@ struct GeometryBuilderDef {
 };
 
 // Parent, abstract class for GeometryBuilders.
-class GeometryBuilder
-    : public WorkerNode
-    , public Consumer<SensorAnglesFrame>
-    , public Producer<ObjectPosition>  {
+class GeometryBuilder: public WorkerNode, public Consumer<SensorAnglesFrame>, public Producer<ObjectPosition>  {
 public:
     GeometryBuilder(uint32_t idx, const GeometryBuilderDef &geo_def,
                     const Vector<BaseStationGeometryDef, num_base_stations> &base_stations);
-    
+
 protected:
     uint32_t object_idx_;
     const Vector<BaseStationGeometryDef, num_base_stations> &base_stations_;
@@ -74,11 +71,8 @@ union CoordSysDef {
 };
 
 // Helper node to convert coordinates to a different coordinate system.
-class CoordinateSystemConverter
-    : public WorkerNode
-    , public Consumer<ObjectPosition>
-    , public Producer<ObjectPosition> {
-public:
+class CoordinateSystemConverter: public WorkerNode, public Consumer<ObjectPosition>, public Producer<ObjectPosition> {
+  public:
     CoordinateSystemConverter(float m[9]);
 
     static std::unique_ptr<CoordinateSystemConverter> create(CoordSysType type, const CoordSysDef& def);
@@ -91,6 +85,6 @@ public:
     virtual bool debug_cmd(HashedWord *input_words);
     virtual void debug_print(PrintStream &stream);
 
-private:
+  private:
     float mat_[9];
 };

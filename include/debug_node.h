@@ -6,12 +6,8 @@
 
 // This node calls debug_cmd and debug_print for all pipeline nodes periodically,
 // provides some other debug facilities and blinks LED.
-class DebugNode 
-    : public WorkerNode
-    , public DataChunkLineSplitter
-    , public Producer<DataChunk>
-    , public Producer<OutputCommand> {
-public:
+class DebugNode: public WorkerNode, public DataChunkLineSplitter, public Producer<DataChunk>, public Producer<OutputCommand> {
+  public:
     DebugNode(Pipeline *pipeline);
 
     virtual void consume_line(char *line, Timestamp time);
@@ -19,7 +15,7 @@ public:
     virtual bool debug_cmd(HashedWord *input_words);
     virtual void debug_print(PrintStream &stream);
 
-private:
+  private:
     void set_output_attached(bool attached);
 
     Pipeline *pipeline_;

@@ -13,4 +13,3 @@ enum class LedState {
 
 void set_led_state(LedState state);
 void update_led_pattern(Timestamp cur_time);
-
